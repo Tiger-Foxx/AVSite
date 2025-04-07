@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foxy Security - Antivirus Open Source Moderne</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://theoldfox.pythonanywhere.com/static/images/home/hero.jpg" type="image/x-icon"><link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- AOS Library for Scroll Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --blur-intensity: 12px; /* Control blur intensity */
+            --transition-duration: 300ms; /* Consistent transition speed */
+        }
+
+        html {
+             scroll-behavior: smooth; /* Already present, good */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505; /* Slightly darker black */
+            color: #e0e0e0; /* Slightly softer white */
+            overflow-x: hidden; /* Prevent horizontal scroll caused by animations */
+        }
+
+        /* --- Navigation Enhancements --- */
+        nav.scrolled {
+            background-color: rgba(10, 10, 10, 0.7); /* Darker background when scrolled */
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color var(--transition-duration) ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; /* Slightly lower */
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width var(--transition-duration) ease-in-out; /* Smoother ease */
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* --- Mobile Menu Styling --- */
+        #mobile-menu {
+            transition: opacity var(--transition-duration) ease, visibility var(--transition-duration) ease;
+            visibility: hidden; /* Start hidden */
+            opacity: 0;
+        }
+        #mobile-menu.active {
+            opacity: 1;
+            visibility: visible; /* Make visible when active */
+        }
+
+        /* --- Hero Section Enhancements --- */
+        .hero-gradient {
+            /* More subtle gradient */
+            background: linear-gradient(145deg, #111 10%, #050505 80%);
+            position: relative;
+            overflow: hidden; /* Contain decorative elements */
+        }
+        /* Decorative blurred shape behind hero image */
+        .hero-blur-shape {
+             position: absolute;
+             top: 20%;
+             right: 5%;
+             width: 400px;
+             height: 400px;
+             background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 70%);
+             filter: blur(100px);
+             z-index: 0;
+             pointer-events: none; /* Make it non-interactive */
+             animation: subtlePulse 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes subtlePulse {
+            from { transform: scale(0.9); opacity: 0.8; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+
+        .hero-content {
+            position: relative; /* Ensure content is above blur shape */
+            z-index: 1;
+        }
+
+        /* --- Card Enhancements --- */
+        .feature-card {
+            background: rgba(25, 25, 25, 0.6); /* Slightly adjusted background */
+            backdrop-filter: blur(var(--blur-intensity));
+            border: 1px solid rgba(255, 255, 255, 0.08); /* Softer border */
+            transition: transform var(--transition-duration) ease, box-shadow var(--transition-duration) ease, background-color var(--transition-duration) ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02); /* More pronounced lift and slight scale */
+            background: rgba(35, 35, 35, 0.7);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- Button Enhancements --- */
+        .btn { /* Base button class */
+            transition: all var(--transition-duration) ease;
+            border-radius: 999px; /* Pill shape */
+            font-weight: 500;
+            padding: 0.8rem 2rem; /* Adjusted padding */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            box-shadow: 0 5px 18px rgba(59, 130, 246, 0.25);
+        }
+        .download-btn:hover {
+            transform: translateY(-3px) scale(1.03); /* Lift and scale */
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35);
+            filter: brightness(1.1); /* Slight brightness increase */
+        }
+        .github-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .github-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+        .secondary-btn { /* Example for Analyse/Paramètres */
+             background-color: rgba(59, 130, 246, 0.1);
+             color: #60a5fa;
+             padding: 0.5rem 1rem;
+             border-radius: 0.5rem;
+             font-size: 0.875rem;
+        }
+         .secondary-btn:hover {
+             background-color: rgba(59, 130, 246, 0.2);
+             filter: brightness(1.1);
+         }
+
+        /* --- General Polish --- */
+        h1, h2, h3 {
+            font-weight: 700; /* Bolder headings */
+        }
+        h1 { font-weight: 800; } /* Even bolder for main title */
+        p { color: #a0a0a0; } /* Slightly lighter paragraph text */
+
+        .fox-icon { /* Keep the subtle shadow */
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+        }
+
+        /* Specific element styling for pseudo UI */
+        .pseudo-ui {
+            background: #1a1a1a; /* Darker background for contrast */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+        .pseudo-ui-dot {
+             animation: pulseStatus 2s infinite ease-in-out;
+        }
+        .pseudo-ui-dot.yellow { animation-delay: 0.5s; }
+        @keyframes pulseStatus {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav id="main-nav" class="fixed w-full bg-opacity-80 backdrop-filter backdrop-blur-lg z-50 border-b border-gray-900 transition-all duration-300 ease-in-out">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20"> 
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center space-x-2"> 
+                        <i class="fas fa-shield-alt text-blue-500 text-2xl lg:text-3xl fox-icon"></i>
+                        <span class="text-xl lg:text-2xl font-bold text-white">Foxy Security</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Fonctionnalités</a>
+                    <a href="#about" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">À propos</a>
+                    <a href="#download" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Télécharger</a>
+                    <a href="https://github.com/Tiger-Foxx/Anti-Virus" target="_blank" rel="noopener noreferrer" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium flex items-center">
+                        <i class="fab fa-github mr-2"></i> GitHub
+                    </a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" aria-label="Ouvrir le menu" class="text-gray-300 hover:text-white focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-black bg-opacity-90 backdrop-filter backdrop-blur-xl z-[60] flex flex-col items-center justify-center space-y-8">
+         <button id="mobile-menu-close" aria-label="Fermer le menu" class="absolute top-6 right-6 text-gray-400 hover:text-white text-3xl">
+             <i class="fas fa-times"></i>
+         </button>
+        <a href="#features" class="text-gray-200 hover:text-blue-400 text-2xl font-medium mobile-nav-link">Fonctionnalités</a>
+        <a href="#about" class="text-gray-200 hover:text-blue-400 text-2xl font-medium mobile-nav-link">À propos</a>
+        <a href="#download" class="text-gray-200 hover:text-blue-400 text-2xl font-medium mobile-nav-link">Télécharger</a>
+        <a href="https://github.com/Tiger-Foxx/Anti-Virus" target="_blank" rel="noopener noreferrer" class="text-gray-200 hover:text-blue-400 text-2xl font-medium mobile-nav-link flex items-center">
+            <i class="fab fa-github mr-3"></i> GitHub
+        </a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient pt-32 pb-24 md:pt-40 md:pb-32 px-4 sm:px-6 lg:px-8">
+         <div class="hero-blur-shape" aria-hidden="true"></div> 
+        <div class="max-w-7xl mx-auto hero-content"> 
+            <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-16">
+                <div class="md:w-1/2 text-center md:text-left" data-aos="fade-right" data-aos-delay="100">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+                        Protection simple. <br>
+                        <span class="text-blue-400">Open Source.</span> <br>
+                        Pour tous.
+                    </h1>
+                    <p class="text-lg text-gray-400 mb-10 max-w-lg mx-auto md:mx-0">
+                        Foxy Security est un antivirus gratuit et open source développé avec passion.
+                        Léger, efficace et transparent - parce que votre sécurité ne devrait pas être un mystère.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center md:justify-start">
+                        <a href="#download" class="btn download-btn">
+                            <i class="fas fa-download mr-2"></i> Télécharger
+                        </a>
+                        <a href="https://github.com/Tiger-Foxx/Anti-Virus" target="_blank" rel="noopener noreferrer" class="btn github-btn">
+                            <i class="fab fa-github mr-2"></i> Voir le code
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center" data-aos="fade-left" data-aos-delay="300">
+                    <div class="relative w-full max-w-md lg:max-w-lg">
+                        <div class="pseudo-ui relative p-8 rounded-2xl shadow-2xl">
+                            <div class="flex items-center mb-6">
+                                <i class="fas fa-shield-alt text-blue-500 text-3xl mr-4 fox-icon"></i>
+                                <h3 class="text-xl font-semibold text-white">Foxy Security</h3>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-green-500 mr-3 pseudo-ui-dot"></div>
+                                    <span class="text-gray-300">Système sécurisé</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 rounded-full bg-yellow-500 mr-3 pseudo-ui-dot yellow"></div>
+                                    <span class="text-gray-300">Analyse en arrière-plan...</span>
+                                </div>
+                                <div class="bg-gray-800 rounded-lg p-4 mt-6">
+                                    <div class="flex justify-between text-sm text-gray-400 mb-2">
+                                        <span>Protection en temps réel</span>
+                                        <span class="text-green-400 font-medium">Actif</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-8 pt-6 border-t border-gray-700 flex justify-between items-center">
+                                <button class="secondary-btn text-sm">
+                                    <i class="fas fa-cog mr-2"></i> Paramètres
+                                </button>
+                                <button class="btn download-btn text-sm py-2 px-5"> 
+                                    Analyser Maintenant
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-black">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 md:mb-20" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-5">Ce que Foxy Security peut faire</h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    (Oui, on n'est pas encore au niveau des grands... mais on s'améliore chaque jour avec votre aide !)
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+                <div class="feature-card rounded-xl p-8" data-aos="fade-up" data-aos-delay="100">
+                     <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-search text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Analyse des menaces</h3>
+                    <p class="text-gray-400">
+                        Détection des malwares connus via une base de signatures open source, mise à jour régulièrement.
+                    </p>
+                </div>
+                 <div class="feature-card rounded-xl p-8" data-aos="fade-up" data-aos-delay="200">
+                     <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-shield-virus text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Protection Basique en Temps Réel</h3>
+                    <p class="text-gray-400">
+                       Surveillance simple des fichiers et processus pour bloquer les menaces évidentes avant l'infection. (En cours d'amélioration !)
+                    </p>
+                </div>
+                 <div class="feature-card rounded-xl p-8" data-aos="fade-up" data-aos-delay="300">
+                     <div class="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-lg flex items-center justify-center mb-6 shadow-lg">
+                         <i class="fas fa-code text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Open Source & Transparent</h3>
+                    <p class="text-gray-400">
+                        Code entièrement vérifiable sur GitHub. Pas de portes dérobées, pas de collecte de données cachée. La confiance par la preuve.
+                    </p>
+                </div>
+                 <div class="feature-card rounded-xl p-8" data-aos="fade-up" data-aos-delay="100">
+                     <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-lg flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-bolt text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Léger et Rapide</h3>
+                    <p class="text-gray-400">
+                        Conçu pour une faible consommation de ressources. Idéal pour ne pas ralentir votre PC, même les plus anciens.
+                    </p>
+                </div>
+                 <div class="feature-card rounded-xl p-8" data-aos="fade-up" data-aos-delay="200">
+                     <div class="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-lg flex items-center justify-center mb-6 shadow-lg">
+                         <i class="fas fa-lock text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Quarantaine Sécurisée</h3>
+                    <p class="text-gray-400">
+                        Isolement des fichiers suspects pour analyse, vous laissant le contrôle avant suppression définitive.
+                    </p>
+                </div>
+                 <div class="feature-card rounded-xl p-8" data-aos="fade-up" data-aos-delay="300">
+                     <div class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg flex items-center justify-center mb-6 shadow-lg">
+                         <i class="fas fa-users text-white text-xl"></i> 
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Communauté Active</h3>
+                    <p class="text-gray-400">
+                       Développé avec passion et ouvert aux contributions. Rejoignez-nous pour rendre Foxy encore meilleur !
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-gray-950"> 
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                <div class="lg:w-1/2" data-aos="fade-right">
+                    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white">Un antivirus différent, par principe.</h2>
+                    <p class="text-gray-400 text-lg mb-6">
+                        Foxy Security est né d'une idée simple : la sécurité numérique devrait être accessible, transparente et contrôlée par l'utilisateur, pas par des entreprises opaques.
+                    </p>
+                    <p class="text-gray-400 text-lg mb-8">
+                        Nous nous battons contre les logiciels lourds, coûteux et indiscrets. Notre approche est open source, légère et respectueuse de votre vie privée. C'est notre engagement.
+                    </p>
+                    <div class="flex items-center bg-gray-800 p-4 rounded-lg border border-gray-700 max-w-sm">
+                        <img src="https://avatars.githubusercontent.com/u/118616410?v=4" alt="Avatar du développeur" class="w-12 h-12 rounded-full mr-4 border-2 border-blue-500"> 
+                        <div>
+                            <h4 class="font-medium text-white">Fox Dev</h4>
+                            <p class="text-sm text-gray-500">Développeur Principal & Cyber-Renard Enthousiaste</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2" data-aos="fade-left" data-aos-delay="200">
+                    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 shadow-lg">
+                        <h3 class="text-xl font-semibold mb-6 flex items-center text-white">
+                            <i class="fas fa-info-circle text-blue-400 mr-3"></i>
+                            Ce qu'il faut savoir
+                        </h3>
+                        <div class="space-y-5"> 
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-green-400 mr-3 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h5 class="font-medium text-white">Gratuit et Open Source</h5>
+                                    <p class="text-gray-400 text-sm">Pas de coûts cachés, pas de version premium. Le code est sur GitHub.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start">
+                                <i class="fas fa-check-circle text-green-400 mr-3 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h5 class="font-medium text-white">Respect de la vie privée</h5>
+                                    <p class="text-gray-400 text-sm">Nous ne collectons pas vos données personnelles. Point final.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-exclamation-triangle text-yellow-400 mr-3 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h5 class="font-medium text-white">En Développement Actif</h5>
+                                    <p class="text-gray-400 text-sm">Foxy s'améliore constamment, mais n'a pas (encore) toutes les fonctionnalités des géants du marché.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start">
+                                <i class="fas fa-users text-blue-400 mr-3 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <h5 class="font-medium text-white">Votre Contribution Compte</h5>
+                                    <p class="text-gray-400 text-sm">Signalez les bugs, suggérez des idées, ou contribuez au code !</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-black">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 md:mb-20" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-5">Télécharger Foxy Security</h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Prêt à essayer ? Téléchargez la dernière version pour Windows. C'est gratuit, comme promis.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-8 md:p-12 border border-gray-700 shadow-xl">
+                    <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                        <div class="md:w-1/3 text-center">
+                            <div class="flex items-center justify-center bg-gray-700 rounded-lg p-6 mb-6 w-32 h-32 mx-auto shadow-md">
+                                <i class="fas fa-shield-alt text-blue-400 text-6xl fox-icon"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-white mb-1">Version 1.0.0</h3>
+                            <p class="text-gray-400 text-sm">
+                                Sortie le 6 avril 2025
+                            </p>
+                        </div>
+                        <div class="md:w-2/3 w-full">
+                            <div class="space-y-5">
+                                <a href="https://github.com/Tiger-Foxx/Anti-Virus/releases/download/Foxy/Foxy.Security.exe" class="btn download-btn w-full text-lg py-4">
+                                    <i class="fab fa-windows mr-3"></i> Télécharger pour Windows (64-bit)
+                                </a>
+                                <a href="https://github.com/Tiger-Foxx/Anti-Virus/releases" target="_blank" rel="noopener noreferrer" class="btn github-btn w-full py-4">
+                                    <i class="fas fa-box-archive mr-3"></i> Voir toutes les versions
+                                </a>
+                                <a href="https://github.com/Tiger-Foxx/Anti-Virus" target="_blank" rel="noopener noreferrer" class="btn bg-gray-700 hover:bg-gray-600 text-white w-full py-4">
+                                    <i class="fab fa-github mr-3"></i> Explorer le Code Source
+                                </a>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <p class="text-gray-400 text-sm flex items-center justify-center">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i> Compatible Windows 10 & 11
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-16 text-center text-gray-500" data-aos="fade-up" data-aos-delay="300">
+                     <h3 class="text-xl font-semibold mb-6 text-white">Installation facile</h3>
+                     <ol class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8">
+                         <li class="flex items-center justify-center md:justify-start"> <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 text-xs font-bold">1</span> Télécharger</li>
+                         <li class="flex items-center justify-center md:justify-start"> <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 text-xs font-bold">2</span> Exécuter</li>
+                         <li class="flex items-center justify-center md:justify-start"> <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-3 text-xs font-bold">3</span> Analyser</li>
+                     </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-800 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                 <div class="mb-6 md:mb-0">
+                    <div class="flex items-center mb-4">
+                         <i class="fas fa-shield-alt text-blue-500 text-2xl mr-2 fox-icon"></i>
+                        <span class="text-xl font-bold text-white">Foxy Security</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Protection open source, transparente et légère. Construite par la communauté, pour la communauté.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4 tracking-wide">Navigation</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#features" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Fonctionnalités</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">À propos</a></li>
+                        <li><a href="#download" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Télécharger</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4 tracking-wide">Communauté</h4>
+                    <ul class="space-y-3">
+                        <li><a href="https://github.com/Tiger-Foxx/Anti-Virus" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">GitHub</a></li>
+                        <li><a href="https://github.com/Tiger-Foxx/Anti-Virus/issues" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Signaler un Bug</a></li>
+                        <li><a href="https://github.com/Tiger-Foxx/Anti-Virus/discussions" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Discussions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Contribuer</a></li> 
+                    </ul>
+                </div>
+                <div>
+                     <h4 class="text-white font-semibold mb-4 tracking-wide">Légal</h4>
+                     <ul class="space-y-3">
+                         <li><a href="#" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Licence MIT</a></li>
+                         <li><a href="#" class="text-gray-400 hover:text-blue-400 text-sm transition-colors">Politique de confidentialité</a></li>
+                     </ul>
+                     <h4 class="text-white font-semibold mb-4 mt-6 tracking-wide">Suivez-nous</h4>
+                     <div class="flex space-x-4">
+                         <a href="#" aria-label="GitHub" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-github text-xl"></i></a>
+                         <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-twitter text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p class="text-gray-500 text-sm">
+                    © 2025 Foxy Security Project. Le code est distribué sous licence MIT.
+                     <br class="md:hidden"> Faites-en bon usage ! 🦊
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Library JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 700, // Animation duration
+            easing: 'ease-out-cubic', // Animation timing function
+            once: true, // Only animate elements once
+            offset: 50, // Trigger animations slightly sooner
+            disable: 'mobile' // Optional: disable animations on mobile
+        });
+
+        // --- Mobile Menu Logic ---
+        const menuButton = document.getElementById('mobile-menu-button');
+        const closeButton = document.getElementById('mobile-menu-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileNavLinks = mobileMenu.querySelectorAll('.mobile-nav-link'); // Get links inside mobile menu
+
+        function openMenu() {
+            mobileMenu.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeMenu() {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = ''; // Restore background scrolling
+        }
+
+        menuButton.addEventListener('click', openMenu);
+        closeButton.addEventListener('click', closeMenu);
+
+        // Close menu when a link is clicked
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu if user clicks outside the menu content (optional, good UX)
+        // mobileMenu.addEventListener('click', (event) => {
+        //    if (event.target === mobileMenu) { // Check if the click is on the backdrop itself
+        //        closeMenu();
+        //    }
+        // });
+
+        // --- Navbar Scroll Effect ---
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling (already present, kept for completeness)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                 // Only prevent default for internal links that are not just '#'
+                 if (this.getAttribute('href') !== '#') {
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        targetElement.scrollIntoView({
+                             behavior: 'smooth',
+                             block: 'start' // Align top of the target element to the top of the viewport
+                        });
+
+                        // Close mobile menu if open after navigating
+                         if (mobileMenu.classList.contains('active')) {
+                             closeMenu();
+                         }
+                    }
+                 }
+            });
+        });
+
+    </script>
+</body>
+</html>
